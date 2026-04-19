@@ -333,3 +333,160 @@ button.danger { color: var(--bad); }
 .policy-grid .header { background: var(--panel); color: var(--muted); font-weight: 600; }
 .policy-grid .bank { color: var(--good); }
 .policy-grid .roll { color: var(--accent); }
+
+/* ── Mobile ──────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  header {
+    padding: 8px 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  h1 { font-size: 18px; }
+  h2 { font-size: 16px; }
+  h3 { font-size: 14px; }
+
+  #tabs {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab {
+    padding: 8px 12px;
+    font-size: 13px;
+    flex-shrink: 0;
+    min-height: 40px;
+  }
+
+  main { padding: 12px; }
+
+  .card {
+    padding: 14px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+  }
+
+  /* Inputs + buttons larger for touch */
+  button, select, input[type=text], input[type=number] {
+    min-height: 40px;
+    font-size: 15px; /* prevents iOS auto-zoom on focus */
+  }
+  input[type=number] { width: 80px; }
+  button { padding: 8px 14px; }
+
+  /* Dice tray: smaller dice, tighter gap, fits 6 per row on 360px screens */
+  #dice-tray {
+    gap: 8px;
+    margin: 14px 0;
+    justify-content: center;
+  }
+  .die {
+    width: 48px;
+    height: 48px;
+    padding: 6px;
+    border-width: 2px;
+  }
+  .pip { width: 7px; height: 7px; }
+
+  #turn-info {
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+  }
+
+  #turn-actions {
+    flex-wrap: wrap;
+  }
+  #turn-actions button {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .score-card {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 0;
+    padding: 8px 10px;
+  }
+  .score-card .score { font-size: 20px; }
+
+  #turn-log {
+    max-height: 120px;
+    font-size: 11px;
+  }
+
+  /* Settings: single-column scoring grid */
+  .scoring-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .scoring-grid label {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Player setup rows wrap */
+  .player-row {
+    flex-wrap: wrap;
+  }
+  .player-row input[type=text] {
+    width: 100%;
+    flex: 1 1 120px;
+  }
+  .player-row select {
+    flex: 1 1 140px;
+  }
+
+  /* Strategy rule rows: stack conditions for readability */
+  .rule-row {
+    grid-template-columns: 1fr 1fr 90px auto;
+    grid-template-areas:
+      "label   label   label   del"
+      "var     var     var     var"
+      "op      value   addand  .";
+    gap: 6px 6px;
+    padding: 8px;
+    background: var(--panel);
+    border-radius: 6px;
+  }
+  .rule-row > :nth-child(1) { grid-area: label; font-size: 12px; color: var(--muted); }
+  .rule-row > :nth-child(2) { grid-area: var; }
+  .rule-row > :nth-child(3) { grid-area: op; }
+  .rule-row > :nth-child(4) { grid-area: value; }
+  .rule-row > :nth-child(5) { grid-area: addand; }
+  .rule-row > :nth-child(6) { grid-area: del; }
+  .rule-row.rule-header { display: none; } /* header row redundant once stacked */
+
+  /* Sim controls: stack labels/selects */
+  #tab-simulate .row,
+  .row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #tab-simulate label,
+  .row > label {
+    width: 100%;
+  }
+  #sim-strategies { width: 100%; }
+
+  /* Results tables + policy grid: horizontal scroll instead of overflow */
+  .results-table {
+    font-size: 12px;
+  }
+  #sim-results, #solver-results {
+    overflow-x: auto;
+  }
+  .policy-grid {
+    font-size: 11px;
+    grid-template-columns: auto repeat(6, minmax(50px, 1fr));
+    overflow-x: auto;
+  }
+  .bar { display: none; }
+}
+
+/* Slightly more breathing room on tablets */
+@media (min-width: 641px) and (max-width: 900px) {
+  main { padding: 16px; }
+  .die { width: 56px; height: 56px; }
+}
