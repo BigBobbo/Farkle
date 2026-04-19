@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farkle</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>Farkle</h1>
+  <nav id="tabs">
+    <button class="tab active" data-tab="play">Play</button>
+    <button class="tab" data-tab="settings">Settings</button>
+    <button class="tab" data-tab="simulate">Simulate</button>
+    <button class="tab" data-tab="solver">Solver</button>
+  </nav>
+</header>
+
+<main>
+  <!-- PLAY TAB -->
+  <section id="tab-play" class="tab-panel active">
+    <div id="play-setup" class="card">
+      <h2>New game</h2>
+      <label>Players:
+        <input type="number" id="num-players" min="1" max="6" value="2">
+      </label>
+      <div id="player-list"></div>
+      <button id="start-game" class="primary">Start game</button>
+    </div>
+
+    <div id="play-board" class="card hidden">
+      <div id="scoreboard"></div>
+      <div id="current-turn">
+        <h3 id="turn-label"></h3>
+        <div id="dice-tray"></div>
+        <div id="turn-info">
+          <span>Turn score: <strong id="turn-score">0</strong></span>
+          <span>Selected: <strong id="selected-score">0</strong></span>
+          <span>Dice to roll: <strong id="dice-to-roll">6</strong></span>
+        </div>
+        <div id="turn-actions">
+          <button id="btn-roll" class="primary">Roll</button>
+          <button id="btn-bank">Bank</button>
+          <button id="btn-new-game">New game</button>
+        </div>
+        <div id="turn-message"></div>
+      </div>
+      <div id="turn-log"></div>
+    </div>
+  </section>
+
+  <!-- SETTINGS TAB -->
+  <section id="tab-settings" class="tab-panel">
+    <div class="card">
+      <h2>Game rules</h2>
+      <p class="muted">Defaults match Mike Perrotta's article. Changes apply to new games and simulations.</p>
+      <div id="settings-form"></div>
+      <div class="row">
+        <button id="settings-reset">Reset to defaults</button>
+        <button id="settings-save" class="primary">Save</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIMULATE TAB -->
+  <section id="tab-simulate" class="tab-panel">
+    <div class="card">
+      <h2>Strategies</h2>
+      <p class="muted">Define a strategy as a list of "bank if…" rules. The first matching rule banks; otherwise the player keeps rolling.</p>
+      <div id="strategy-list"></div>
+      <button id="strategy-add">+ New strategy</button>
+    </div>
+    <div class="card">
+      <h2>Run simulation</h2>
+      <div class="row">
+        <label>Strategies:
+          <select id="sim-strategies" multiple size="6"></select>
+        </label>
+        <label>Games per strategy:
+          <input type="number" id="sim-games" value="5000" min="100" max="200000">
+        </label>
+        <label>Mode:
+          <select id="sim-mode">
+            <option value="solo">Solo (avg score per turn)</option>
+            <option value="race">Race to target (avg turns to win)</option>
+            <option value="head2head">Head-to-head (win rate)</option>
+          </select>
+        </label>
+        <button id="sim-run" class="primary">Run</button>
+      </div>
+      <div id="sim-results"></div>
+    </div>
+  </section>
+
+  <!-- SOLVER TAB -->
+  <section id="tab-solver" class="tab-panel">
+    <div class="card">
+      <h2>Exact EV solver</h2>
+      <p class="muted">Value iteration over (turn score, dice remaining). Returns the EV-maximizing bank/roll threshold for every state. No game-state context (my_score / opp_score) — pure single-turn optimization.</p>
+      <button id="solver-run" class="primary">Compute optimal policy</button>
+      <div id="solver-results"></div>
+    </div>
+  </section>
+</main>
+
+<script src="js/rules.js"></script>
+<script src="js/dice.js"></script>
+<script src="js/scoring.js"></script>
+<script src="js/strategy.js"></script>
+<script src="js/game.js"></script>
+<script src="js/solver.js"></script>
+<script src="js/simulate.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>
