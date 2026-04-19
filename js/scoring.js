@@ -24,13 +24,6 @@ function _specialWholeSetScore(c, rules) {
     else if (c[f] !== 0) { valid = false; break; }
   }
   if (valid && pairs === 3) best = Math.max(best, rules.threePairs);
-  // Two triplets
-  let trips = 0; valid = true;
-  for (let f = 1; f <= 6; f++) {
-    if (c[f] === 3) trips++;
-    else if (c[f] !== 0) { valid = false; break; }
-  }
-  if (valid && trips === 2) best = Math.max(best, rules.twoTriplets);
   // Four-of-a-kind + pair
   let four = 0, pair = 0; valid = true;
   for (let f = 1; f <= 6; f++) {

@@ -16,8 +16,8 @@ const DEFAULT_RULES = {
   // Special multi-dice combos.
   straight: 1500,        // 1-2-3-4-5-6
   threePairs: 1500,      // e.g. 2,2,4,4,6,6
-  twoTriplets: 2500,     // e.g. 3,3,3,5,5,5
   fourPlusPair: 1500,    // e.g. 4,4,4,4,2,2
+  // Two triplets score additively (sum of the two 3-of-a-kinds), no special bonus.
 
   // End-of-game.
   targetScore: 10000,

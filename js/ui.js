@@ -242,7 +242,6 @@ function renderSettings() {
     <div class="scoring-grid">
       ${numField('Straight (1-2-3-4-5-6)', r.straight, 'straight')}
       ${numField('Three pairs', r.threePairs, 'threePairs')}
-      ${numField('Two triplets', r.twoTriplets, 'twoTriplets')}
       ${numField('Four of a kind + pair', r.fourPlusPair, 'fourPlusPair')}
     </div>
     <h3>Game</h3>
