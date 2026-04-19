@@ -15,15 +15,23 @@
   --selected: #ffd166;
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; min-width: 0; }
 
-body {
+html, body {
   margin: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
 }
+
+/* Global: no element should force horizontal scroll beyond viewport */
+input, select, textarea { max-width: 100%; }
+img, table { max-width: 100%; }
 
 header {
   padding: 12px 24px;
@@ -349,43 +357,52 @@ button.danger { color: var(--bad); }
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
   }
   .tab {
-    padding: 8px 12px;
+    padding: 8px 10px;
     font-size: 13px;
     flex-shrink: 0;
     min-height: 40px;
+    white-space: nowrap;
   }
 
-  main { padding: 12px; }
+  main { padding: 10px; }
 
   .card {
-    padding: 14px;
-    margin-bottom: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
     border-radius: 8px;
+    overflow-x: auto;       /* contain wide children like tables/grids */
+    overflow-y: visible;
   }
 
-  /* Inputs + buttons larger for touch */
+  /* Touch-friendly + full-width inputs; 16px font prevents iOS zoom on focus */
   button, select, input[type=text], input[type=number] {
     min-height: 40px;
-    font-size: 15px; /* prevents iOS auto-zoom on focus */
+    font-size: 16px;
   }
-  input[type=number] { width: 80px; }
-  button { padding: 8px 14px; }
+  select, input[type=text] {
+    width: 100%;
+    min-width: 0;
+  }
+  input[type=number] { width: 100%; max-width: 120px; }
+  button { padding: 8px 12px; }
 
-  /* Dice tray: smaller dice, tighter gap, fits 6 per row on 360px screens */
+  /* Dice tray: allow wrapping to 3 per row on narrow phones */
   #dice-tray {
     gap: 8px;
-    margin: 14px 0;
+    margin: 12px 0;
     justify-content: center;
+    flex-wrap: wrap;
   }
   .die {
-    width: 48px;
-    height: 48px;
-    padding: 6px;
+    width: 44px;
+    height: 44px;
+    padding: 5px;
     border-width: 2px;
   }
-  .pip { width: 7px; height: 7px; }
+  .pip { width: 6px; height: 6px; }
 
   #turn-info {
     flex-direction: column;
@@ -395,9 +412,10 @@ button.danger { color: var(--bad); }
 
   #turn-actions {
     flex-wrap: wrap;
+    gap: 6px;
   }
   #turn-actions button {
-    flex: 1 1 auto;
+    flex: 1 1 calc(50% - 3px);
     min-width: 0;
   }
 
@@ -405,18 +423,21 @@ button.danger { color: var(--bad); }
     flex: 1 1 calc(50% - 6px);
     min-width: 0;
     padding: 8px 10px;
+    word-break: break-word;
   }
   .score-card .score { font-size: 20px; }
+  .score-card .name, .score-card .ai-tag { font-size: 11px; }
 
   #turn-log {
-    max-height: 120px;
+    max-height: 140px;
     font-size: 11px;
+    word-break: break-word;
   }
 
-  /* Settings: single-column scoring grid */
+  /* Settings: single-column label/input */
   .scoring-grid {
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: 8px;
   }
   .scoring-grid label {
     display: flex;
@@ -424,68 +445,100 @@ button.danger { color: var(--bad); }
     justify-content: space-between;
     align-items: center;
     gap: 8px;
-  }
-
-  /* Player setup rows wrap */
-  .player-row {
     flex-wrap: wrap;
   }
-  .player-row input[type=text] {
-    width: 100%;
-    flex: 1 1 120px;
+  .scoring-grid input { max-width: 120px; }
+
+  /* Player setup rows fully stack */
+  .player-row {
+    flex-wrap: wrap;
+    gap: 6px;
   }
+  .player-row > span { width: 100%; font-size: 12px; color: var(--muted); }
+  .player-row input[type=text],
   .player-row select {
-    flex: 1 1 140px;
+    flex: 1 1 100%;
+    width: 100%;
   }
 
-  /* Strategy rule rows: stack conditions for readability */
+  /* Strategy rule rows: one field per line — can't overflow */
+  .strategy { padding: 10px; }
+  .strategy-header { flex-wrap: wrap; }
+  .strategy-header input[type=text] { flex: 1 1 100%; }
+
   .rule-row {
-    grid-template-columns: 1fr 1fr 90px auto;
-    grid-template-areas:
-      "label   label   label   del"
-      "var     var     var     var"
-      "op      value   addand  .";
-    gap: 6px 6px;
-    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 8px 0;
+    padding: 10px;
     background: var(--panel);
+    border: 1px solid var(--border);
     border-radius: 6px;
+    font-size: 13px;
   }
-  .rule-row > :nth-child(1) { grid-area: label; font-size: 12px; color: var(--muted); }
-  .rule-row > :nth-child(2) { grid-area: var; }
-  .rule-row > :nth-child(3) { grid-area: op; }
-  .rule-row > :nth-child(4) { grid-area: value; }
-  .rule-row > :nth-child(5) { grid-area: addand; }
-  .rule-row > :nth-child(6) { grid-area: del; }
-  .rule-row.rule-header { display: none; } /* header row redundant once stacked */
+  .rule-row > * {
+    width: 100%;
+    font-size: 14px;
+  }
+  .rule-row > :nth-child(1) {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+  }
+  .rule-row.rule-header { display: none; }
 
-  /* Sim controls: stack labels/selects */
-  #tab-simulate .row,
+  /* .row containers stack vertically on mobile */
   .row {
     flex-direction: column;
     align-items: stretch;
+    gap: 8px;
   }
-  #tab-simulate label,
-  .row > label {
+  .row > label,
+  .row > button,
+  .row > select,
+  .row > input {
     width: 100%;
   }
-  #sim-strategies { width: 100%; }
+  #sim-strategies { width: 100%; min-height: 160px; }
 
-  /* Results tables + policy grid: horizontal scroll instead of overflow */
+  /* Results: scroll inside card if wider than viewport */
   .results-table {
     font-size: 12px;
+    min-width: 0;
+  }
+  .results-table th, .results-table td {
+    padding: 5px 6px;
+    white-space: nowrap;
   }
   #sim-results, #solver-results {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
   }
+
+  /* Policy grid: tighter cells so it fits a 320px screen without scroll */
   .policy-grid {
-    font-size: 11px;
-    grid-template-columns: auto repeat(6, minmax(50px, 1fr));
-    overflow-x: auto;
+    font-size: 10px;
+    grid-template-columns: 40px repeat(6, 1fr);
   }
+  .policy-grid > div { padding: 4px 2px; }
   .bar { display: none; }
 }
 
-/* Slightly more breathing room on tablets */
+/* Extra-narrow phones (≤380px): shrink dice further so 6 still fit one row */
+@media (max-width: 380px) {
+  .die { width: 40px; height: 40px; padding: 4px; }
+  .pip { width: 5px; height: 5px; }
+  #dice-tray { gap: 6px; }
+  main { padding: 8px; }
+  .card { padding: 10px; }
+  h1 { font-size: 16px; }
+}
+
+/* Tablets */
 @media (min-width: 641px) and (max-width: 900px) {
   main { padding: 16px; }
   .die { width: 56px; height: 56px; }
